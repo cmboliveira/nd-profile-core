@@ -1,0 +1,67 @@
+{
+  "name": "nd-profile-core",
+  "version": "1.0.0",
+  "description": "Framework-agnostic domain contracts for neurodivergence profiles: assertion, facet, consent and profile-view types, vocabularies and filtering.",
+  "keywords": [
+    "neurodiversity",
+    "neurodivergence",
+    "profile",
+    "accessibility",
+    "disability",
+    "domain-model",
+    "domain-contracts",
+    "framework-agnostic",
+    "types",
+    "typescript",
+    "esm",
+    "contracts"
+  ],
+  "homepage": "https://github.com/camilabm/nd-profile-core#readme",
+  "bugs": {
+    "url": "https://github.com/camilabm/nd-profile-core/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/camilabm/nd-profile-core.git"
+  },
+  "author": "Camila B. Mello",
+  "license": "Apache-2.0",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./*": {
+      "types": "./dist/*/index.d.ts",
+      "default": "./dist/*/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE",
+    "LICENSE-SCHEMA.md"
+  ],
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepare": "npm run build"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "packageManager": "pnpm@12.15.0",
+  "publishConfig": {
+    "access": "public"
+  }
+}

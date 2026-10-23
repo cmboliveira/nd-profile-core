@@ -1,29 +1,42 @@
 # nd-profile-core
 
-Core de modelagem de neurodivergência para qualquer ferramenta que aceite a estrutura. Contratos de domínio (tipos, vocabulários e montagem do perfil) agnósticos de framework — NestJS, Fastify, Express, React, CLI.
+Estudo de modelagem de neurodivergência: como estruturar, de forma padronizada, aberta e reutilizável, afirmações sobre o funcionamento de uma pessoa — e como compartilhá-las com segurança.
 
-Biblioteca **framework-agnostic**, **sem dependências de runtime**, **ESM-only**, Node >= 20.19.
+**Este é um repositório de estudo e experimentação.** O objetivo é demonstrar que é possível modelar essa estrutura de maneira aberta. Não é um produto, não é um serviço, não é um padrão de mercado e não está disponível para adoção como infraestrutura oficial. O código e o schema são publicados como referência de aprendizado, sob as licenças indicadas.
 
-> **Este core é uma especificação de estrutura de dados.** Ele não realiza diagnóstico, não emite conclusões, não processa dados de pacientes, não substitui avaliação profissional e **não constitui dispositivo médico**. Os campos `Condition` e `Diagnosis` são **rótulos de modelagem** —names de campos que descrevem *onde* uma afirmação se encaixa — e não afirmações clínicas. Nenhum valor é produzido, validado ou interpretado por esta biblioteca.
+Contratos de domínio (tipos, vocabulários e montagem do perfil) agnósticos de framework — NestJS, Fastify, Express, React, CLI. **framework-agnostic**, **sem dependências de runtime**, **ESM-only**, Node >= 20.19.
+
+> **Este core é uma especificação de estrutura de dados.** Ele não realiza diagnóstico, não emite conclusões, não processa dados de pacientes, não substitui avaliação profissional e **não constitui dispositivo médico**. Os campos `Condition` e `Diagnosis` são **rótulos de modelagem** — nomes de campos que descrevem *onde* uma afirmação se encaixa — e não afirmações clínicas. Nenhum valor é produzido, validado ou interpretado por esta biblioteca.
 
 > **Não afiliado** a "accessibility passports" governamentais ou comerciais (como o *Workplace Accessibility Passport* do serviço público federal canadense), nem a schemas de "cognitive passport" publicados (como o `@p31/cognitive-passport-schema`, AGPL-3.0). "Profile", aqui, é o nome genérico da visão filtrada de asserções — não o produto de nenhum fornecedor.
 
-> **Não é recomendação nem padrão de mercado.** A biblioteca é publicada como infraestrutura. Nenhuma organização a endossa, certifica ou recomenda.
+> **Não é recomendação, endosso nem padrão de mercado.** Nenhuma organização endossa, certifica ou recomenda este trabalho, e o mantenedor não é autoridade certificadora.
 
 ---
 
 ## 1. Instalação
 
+Como referência de estudo, o caminho principal é clonar e construir localmente:
+
+```bash
+git clone https://github.com/camilabm/nd-profile-core.git
+cd nd-profile-core
+pnpm install
+pnpm build
+```
+
+```ts
+import { ProfileService, describeAssertion } from './src/index.js';
+import type { Assertion, Consent, User } from './src/index.js';
+```
+
+Se você preferir consumir como pacote npm — publicado como `0.1.0`, versão de estudo sujeita a mudança —:
+
 ```bash
 npm install nd-profile-core
 ```
 
-```ts
-import { ProfileService, describeAssertion } from 'nd-profile-core';
-import type { Assertion, Consent, User } from 'nd-profile-core';
-```
-
-Importação por subpath:
+Importação por subpath (no npm):
 
 ```ts
 import { ProfileService } from 'nd-profile-core/profile';
@@ -41,7 +54,7 @@ Subpaths: `audience`, `assertion`, `consent`, `facet`, `geography`, `profile`, `
 
 Arquivos: [`LICENSE`](./LICENSE) (Apache-2.0, código) e [`LICENSE-SCHEMA.md`](./LICENSE-SCHEMA.md) (CC0 1.0, schema e documentação). Cada arquivo em `src/` carrega o identificador `SPDX-License-Identifier: Apache-2.0`.
 
-A separação é intencional: o schema precisa ser adotável por qualquer ferramenta, inclusive comercial, sem atrito jurídico. O código de referência mantém a cláusula de patente do Apache-2.0, que dá segurança a adotantes corporativos.
+A separação é intencional: o schema é dedicado ao domínio público para que qualquer pessoa — inclusive comercialmente — possa usá-lo, aprendê-lo e adaptá-lo sem atrito jurídico. O código de referência mantém a cláusula de patente do Apache-2.0, que dá segurança a quem for além do estudo.
 
 **O schema está disponível em JSON Schema**, de forma independente do código:
 
@@ -53,13 +66,13 @@ A separação é intencional: o schema precisa ser adotável por qualquer ferram
 
 Está em [`schema/nd-profile-core.schema.json`](./schema/nd-profile-core.schema.json), sob CC0 1.0. Quem quiser implementar a estrutura em outra linguagem — ou reescrever os tipos a partir do contrato — pode fazê-lo sem tocar em código sob Apache-2.0.
 
-**Nenhuma garantia é fornecida**, incluindo ausência de vícios, comercionalidade ou adequação a uma finalidade específica. O uso é por conta e risco do usuário. A biblioteca não é um dispositivo médico, não é um instrumento de avaliação e não produz resultado clínico algum.
+**Nenhuma garantia é fornecida**, incluindo ausência de vícios, comercionalidade ou adequação a uma finalidade específica. O uso é por conta e risco de quem usa. A biblioteca não é um dispositivo médico, não é um instrumento de avaliação e não produz resultado clínico algum.
 
 ### Marca
 
-O nome `nd-profile-core` **não** é licenciado junto com o schema, e nenhum uso deste README deve ser lido como concessão de direito de marca. Uso do nome para indicar compatibilidade segue a política da Seção 12.
+O nome `nd-profile-core` **não** é licenciado junto com o schema, e nenhum uso deste README deve ser lido como concessão de direito de marca. O uso do nome segue a política da Seção 12.
 
-> **Nota sobre a declaração de conformidade.** O que a Seção 12 descreve é uma **declaração de conformidade** — um checklist público que o implementador pode alegar cumprir. **Não é um selo de conformidade** no sentido de marca de certificação: não é registrado, não é emitido por autoridade reconhecedora, e não produz efeito de garantia. O mantenedor não é autoridade certificadora e não assume obrigação de fiscalizar implementadores. Alegar conformidade a um padrão de fato não cumprido é responsabilidade de quem alega.
+> **Sobre o uso do nome.** Este repositório **não emite selo, certificação ou declaração de conformidade**, e o mantenedor não é autoridade certificadora nem inspeciona implementações. Descrever a sua implementação como "baseada em" ou "inspirada em" `nd-profile-core` é livre; apresentá-la como certificada, homologada ou endossada pelo projeto não é. Alegar um padrão que você não cumpre é responsabilidade de quem alega.
 
 ---
 
@@ -636,34 +649,36 @@ describeAssertion(atencao);
 
 ---
 
-## 11. Conformidade, versionamento e extensão
+## 11. Decisões de design, versionamento e extensão
 
-### Conformidade
+### Decisões de design
 
-Implementações que se dizem compatíveis com `nd-profile-core` **MUST**:
+**Não há padrão a ser seguido aqui.** Estas são as decisões que o core toma, e que você pode adotar, adaptar ou rejeitar livremente. Se quiser seguir o mesmo modelo, são estas:
 
 - produzir `Assertion` com `branch`, `type`, `facet`, `value`, `construct`, `source`, `status` e `polarity` (quando aplicável);
-- respeitar a filtragem por `Consent` e `visibility` exatamente como na Seção 10;
+- respeitar a filtragem por `Consent` e `visibility` como descrito na Seção 10;
 - tratar `expiresAt` como prazo máximo, nunca estendê-lo;
 - ignorar asserções de outro `userId`.
 
-**SHOULD**:
+Duas sugestões, opcionais:
 
 - usar `facetAttributesFor()` para validar entradas externas;
 - documentar o mapeamento de constructos próprios para os atributos do core.
 
-**MAY**:
+E duas portas de escape, igualmente opcionais:
 
 - adicionar atributos livres a `facet.attribute` (via `Open<T>`);
 - adicionar campos próprios sob prefixo `x-` em objetos do core.
 
 ### Versionamento
 
-O schema segue **semver**:
+O schema segue **semver** a partir da `0.1.0`:
 
-- `1.x.y` → `1.x.(y+1)`: adição compatível (novo atributo, novo valor de enum opcional).
-- `1.x.y` → `1.(x+1).0`: adição de campo obrigatório ou mudança de semântica — quebra.
-- `2.0.0`: remoção de campo ou mudança de tipo.
+- `0.x.y` → `0.x.(y+1)`: adição compatível (novo atributo, novo valor de enum opcional).
+- `0.x.y` → `0.(x+1).0`: adição de campo obrigatório ou mudança de semântica — quebra.
+- `1.0.0`: stabilização da API, quando houver.
+
+Por estar em `0.x`, **o schema pode mudar de forma incompatível a qualquer momento**, sem aviso e sem depreciação. O que você usar hoje, valide por conta própria.
 
 Campos marcados como `deprecated` permanecem por **no mínimo duas versões menores** antes de serem removidos.
 
@@ -673,14 +688,15 @@ Para necessidades que o core não cobre, use prefixo `x-` em objetos do core ou 
 
 ---
 
-## 12. Governança e declaração de conformidade
+## 12. Governança
 
-- **Propostas de mudança:** abra issue com a tag `proposal`, descrevendo o caso de uso e o impacto em conformidade.
-- **Decisão:** mudanças que afetam conformidade exigem aprovação do mantenedor e período de comentário público de 14 dias.
+Como este é um repositório de estudo, não existe mecanismo de conformidade: ninguém precisa declarar nada, e o mantenedor não emite certificado. O que existe é o processo de mudança:
+
+- **Propostas de mudança:** abra issue com a tag `proposal`, descrevendo o caso de uso e o que a mudança afeta.
+- **Decisão:** mudanças que alteram a semântica do schema exigem aprovação do mantenedor e período de comentário público de 14 dias.
 - **Recusa:** propostas recusadas ficam registradas com justificativa.
-- **Declaração de conformidade:** alegar compatibilidade exige passar pelas checagens MUST acima. A alegação é do implementador, e apenas dele. O mantenedor não emite selo, não inspeciona implementações e não assume responsabilidade por alegações de terceiros.
 
-> **Alerta sobre a marca.** O nome `nd-profile-core` não é marca registrada neste repositório. Usar o nome para descrever compatibilidade é livre; usá-lo de modo que sugira endosso, certificação ou registro não é. Se você registrar a marca, defina por escrito a política de uso do nome e mantenha-a pública.
+> **Alerta sobre a marca.** O nome `nd-profile-core` não é marca registrada neste repositório, e este repositório não tem pretensão de virar um. Usar o nome para descrever a origem de uma implementação é livre; usá-lo de modo que sugira endosso, certificação ou registro não é. Se um dia o nome for registrado, defina por escrito a política de uso e mantenha-a pública.
 
 ---
 

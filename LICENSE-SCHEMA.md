@@ -16,10 +16,10 @@ compilados em `dist/` — é licenciado sob **Apache-2.0**, no arquivo
 [`LICENSE`](./LICENSE). Cada arquivo em `src/` carrega o identificador
 `SPDX-License-Identifier: Apache-2.0`.
 
-Feito para que qualquer ferramenta — inclusive comercial — possa adotar a
-estrutura sem atrito jurídico. Quem quiser o schema sem atrito pode usar o JSON
-Schema da pasta `schema/`; quem quiser também o código, fica sob Apache-2.0, que
-preserva a cláusula de patente.
+Feito para que qualquer pessoa — inclusive comercialmente — possa usar,
+aprender e adaptar a estrutura sem atrito jurídico. Quem quiser o schema sem
+atrito pode usar o JSON Schema da pasta `schema/`; quem quiser também o código,
+fica sob Apache-2.0, que preserva a cláusula de patente.
 
 > **Sobre a separação.** Em TypeScript, tipos e implementação vivem nos mesmos
 > arquivos. Por isso o CC0 recai sobre o *schema como contrato* — materializado

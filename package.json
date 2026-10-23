@@ -1,7 +1,7 @@
 {
   "name": "nd-profile-core",
-  "version": "1.0.0",
-  "description": "Framework-agnostic domain contracts for neurodivergence profiles: assertion, facet, consent and profile-view types, vocabularies and audience-scoped filtering.",
+  "version": "0.1.0",
+  "description": "Estudo de modelagem de neurodivergência: contratos de domínio (assertion, facet, consent, profile-view) e vocabulários, como referência de aprendizado. Não é produto, serviço ou padrão de mercado.",
   "keywords": [
     "neurodiversity",
     "neurodivergence",
@@ -15,7 +15,8 @@
     "types",
     "typescript",
     "esm",
-    "contracts"
+    "contracts",
+    "study"
   ],
   "homepage": "https://github.com/camilabm/nd-profile-core#readme",
   "bugs": {

@@ -16,16 +16,23 @@ compilados em `dist/` — é licenciado sob **Apache-2.0**, no arquivo
 [`LICENSE`](./LICENSE). Cada arquivo em `src/` carrega o identificador
 `SPDX-License-Identifier: Apache-2.0`.
 
-Feito para que qualquer pessoa — inclusive comercialmente — possa usar,
-aprender e adaptar a estrutura sem atrito jurídico. Quem quiser o schema sem
-atrito pode usar o JSON Schema da pasta `schema/`; quem quiser também o código,
-fica sob Apache-2.0, que preserva a cláusula de patente.
+Feito para que qualquer pessoa — inclusive comercialmente — possa **usar,
+aprender e adaptar** a estrutura sem atrito jurídico. A licença **permite**
+adoção; o projeto **não a recomenda** como padrão, infraestrutura oficial ou
+referência de mercado. É um material de estudo: existe para ser lido,
+experimentado e discutido.
 
 > **Sobre a separação.** Em TypeScript, tipos e implementação vivem nos mesmos
 > arquivos. Por isso o CC0 recai sobre o *schema como contrato* — materializado
 > de forma independente e completa no JSON Schema — e o Apache-2.0 sobre o
 > *código*. Uma implementação que reescreva os tipos a partir do JSON Schema
 > não deriva do código sob Apache-2.0.
+
+> **Escopo.** O CC0 recai sobre o schema e a documentação. Isso significa que o
+> README também pode ser copiado e republicado sem atribuição — escolha
+> deliberada, coerente com o caráter de estudo aberto do projeto. Se em algum
+> momento você quiser exigir atribuição para a documentação, a licença do README
+> precisa mudar para CC BY 4.0; o schema pode permanecer em CC0.
 
 ---
 

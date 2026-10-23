@@ -6,6 +6,20 @@ Estudo de modelagem de neurodivergência: como estruturar, de forma padronizada,
 
 Contratos de domínio (tipos, vocabulários e montagem do perfil) agnósticos de framework — NestJS, Fastify, Express, React, CLI. **framework-agnostic**, **sem dependências de runtime**, **ESM-only**, Node >= 20.19.
 
+### Em uma frase
+
+Um estudo de modelagem de neurodivergência: schema aberto que demonstra como estruturar afirmações sobre funcionamento humano e compartilhá-las sob consentimento explícito — sem ser produto, serviço, padrão de mercado ou dispositivo médico.
+
+### O que você encontra aqui
+
+- **O problema:** como modelar afirmações sobre funcionamento de forma que a própria pessoa controle o que é compartilhado, com quem e por quanto tempo.
+- **A solução proposta:** um contrato de domínio (`User`, `Assertion`, `Consent`, `ProfileView`) e um serviço de filtragem (`ProfileService.build()`) que falha fechado — sem consentimento ativo, nada é entregue.
+- **O que este projeto não é:** não diagnostica, não processa dados clínicos, não armazena nada, não emite laudo e não substitui avaliação profissional.
+- **Como usar:** clone e construa localmente (Seção 1); a publicação no npm é a `0.1.0`, de estudo, sujeita a mudança.
+- **O que ler primeiro:** Seção 3 (modelo mental), Seção 5 (como preencher) e Seção 15 (o que o core não garante).
+
+> **Nota de versão.** `0.1.0` é versão de estudo. O schema está em `0.x` e pode mudar de forma incompatível a qualquer momento, sem aviso e sem depreciação. O que você usar hoje, valide por conta própria.
+
 > **Este core é uma especificação de estrutura de dados.** Ele não realiza diagnóstico, não emite conclusões, não processa dados de pacientes, não substitui avaliação profissional e **não constitui dispositivo médico**. Os campos `Condition` e `Diagnosis` são **rótulos de modelagem** — nomes de campos que descrevem *onde* uma afirmação se encaixa — e não afirmações clínicas. Nenhum valor é produzido, validado ou interpretado por esta biblioteca.
 
 > **Não afiliado** a "accessibility passports" governamentais ou comerciais (como o *Workplace Accessibility Passport* do serviço público federal canadense), nem a schemas de "cognitive passport" publicados (como o `@p31/cognitive-passport-schema`, AGPL-3.0). "Profile", aqui, é o nome genérico da visão filtrada de asserções — não o produto de nenhum fornecedor.
@@ -762,7 +776,7 @@ Software com indicação médica — diagnóstico, prognóstico, monitoramento, 
 O **sigilo profissional** é dever do profissional, não um atributo de dado. O `authorId` aponta para quem produziu a asserção; `source.kind: 'professional_evaluation'` indica que um profissional habilitado produziu o conteúdo. O core não verifica habilitação, não autentica autoria e não substitui a guarda de prontuário.
 
 - **Psicologia.** O Código de Ética do Psicólogo (CFP, 2005, art. 9º) impõe o dever de sigilo profissional, com reflexos na guarda e no compartilhamento de dados psicológicos. Compartilhar dado psicológico com empregador não é ato de terceiro: é ato do profissional responsável, e ele responde por ele.
-- **Medicina.** A Resolução CFM nº 2.454/2026, que normatiza o uso de IA na medicina, incide sobre **médicos e instituições médicas que usam IA em contexto assistencial** — não sobre fornecedores de software. Se um produto construído sobre este schema for usado por um médico, é o **médico** que responde perante o CFM, não o fornecedor do schema. As obrigações ali previstas (supervisão humana, vedação à delegação de comunicação de diagnósticos sem mediação humana, registro do uso no prontuário, dever de zelar pela confidencialidade dos dados de saúde) são dele. O core não é destinado a contexto assistencial.
+- **Medicina.** A resolução do CFM que normatiza o uso de IA na medicina (Resolução CFM nº 2.454, de 11 de fevereiro de 2026, em vigor desde 26 de agosto de 2026) incide sobre **médicos e instituições médicas que usam IA em contexto assistencial** — não sobre fornecedores de software. Se um produto construído sobre este schema for usado por um médico, é o **médico** que responde perante o CFM, não o fornecedor do schema. As obrigações ali previstas (supervisão humana, vedação à delegação de comunicação de diagnósticos sem mediação humana, registro do uso no prontuário, dever de zelar pela confidencialidade dos dados de saúde) são dele. O core não é destinado a contexto assistencial.
 - **Exame de saúde ocupacional.** O acesso ao prontuário de saúde ocupacional é restrito ao médico responsável (coordenador) e, sob sigilo, ao empregador. O empregador não recebe diagnóstico: recebe atestado de aptidão com restrições.
 
 ### Conformidade social e de dados

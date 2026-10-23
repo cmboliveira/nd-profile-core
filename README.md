@@ -4,9 +4,11 @@ Core de modelagem de neurodivergência para qualquer ferramenta que aceite a est
 
 Biblioteca **framework-agnostic**, **sem dependências de runtime**, **ESM-only**, Node >= 20.19.
 
-> **Não afiliado** a "accessibility passports" governamentais ou comerciais, nem a schemas de "cognitive passport" publicados. "Profile", aqui, é o nome genérico da visão filtrada de asserções — não o produto de nenhum fornecedor.
+> **Este core é uma especificação de estrutura de dados.** Ele não realiza diagnóstico, não emite conclusões, não processa dados de pacientes, não substitui avaliação profissional e **não constitui dispositivo médico**. Os campos `Condition` e `Diagnosis` são **rótulos de modelagem** —names de campos que descrevem *onde* uma afirmação se encaixa — e não afirmações clínicas. Nenhum valor é produzido, validado ou interpretado por esta biblioteca.
 
-> **Este core não é dispositivo médico.** Não diagnostica, não coleta dados, não substitui avaliação profissional. Ele apenas descreve a **estrutura** de afirmações sobre funcionamento humano. Quem implementa é responsável pelo uso.
+> **Não afiliado** a "accessibility passports" governamentais ou comerciais (como o *Workplace Accessibility Passport* do serviço público federal canadense), nem a schemas de "cognitive passport" publicados (como o `@p31/cognitive-passport-schema`, AGPL-3.0). "Profile", aqui, é o nome genérico da visão filtrada de asserções — não o produto de nenhum fornecedor.
+
+> **Não é recomendação nem padrão de mercado.** A biblioteca é publicada como infraestrutura. Nenhuma organização a endossa, certifica ou recomenda.
 
 ---
 
@@ -32,16 +34,32 @@ Subpaths: `audience`, `assertion`, `consent`, `facet`, `geography`, `profile`, `
 
 ---
 
-## 2. Licença
+## 2. Licença e garantia
 
-- **Schema, tipos e documentação:** CC0 1.0 (domínio público). Uso livre, sem atribuição obrigatória.
-- **Código de referência e validadores:** Apache-2.0.
+- **Schema, tipos e documentação:** [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) — domínio público. Uso livre, sem atribuição obrigatória.
+- **Código de referência e validadores:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0).
+
+Arquivos: [`LICENSE`](./LICENSE) (Apache-2.0, código) e [`LICENSE-SCHEMA.md`](./LICENSE-SCHEMA.md) (CC0 1.0, schema e documentação). Cada arquivo em `src/` carrega o identificador `SPDX-License-Identifier: Apache-2.0`.
 
 A separação é intencional: o schema precisa ser adotável por qualquer ferramenta, inclusive comercial, sem atrito jurídico. O código de referência mantém a cláusula de patente do Apache-2.0, que dá segurança a adotantes corporativos.
 
-Arquivos: [`LICENSE`](./LICENSE) (Apache-2.0, código) e [`LICENSE-SCHEMA.md`](./LICENSE-SCHEMA.md) (CC0 1.0, schema e documentação).
+**O schema está disponível em JSON Schema**, de forma independente do código:
 
-O nome `nd-profile-core` e eventuais selos de conformidade **não** são licenciados junto com o schema. Uso do nome para indicar compatibilidade segue a política da Seção 10.
+```json
+{
+  "$id": "https://github.com/camilabm/nd-profile-core/schema/nd-profile-core.schema.json"
+}
+```
+
+Está em [`schema/nd-profile-core.schema.json`](./schema/nd-profile-core.schema.json), sob CC0 1.0. Quem quiser implementar a estrutura em outra linguagem — ou reescrever os tipos a partir do contrato — pode fazê-lo sem tocar em código sob Apache-2.0.
+
+**Nenhuma garantia é fornecida**, incluindo ausência de vícios, comercionalidade ou adequação a uma finalidade específica. O uso é por conta e risco do usuário. A biblioteca não é um dispositivo médico, não é um instrumento de avaliação e não produz resultado clínico algum.
+
+### Marca
+
+O nome `nd-profile-core` **não** é licenciado junto com o schema, e nenhum uso deste README deve ser lido como concessão de direito de marca. Uso do nome para indicar compatibilidade segue a política da Seção 12.
+
+> **Nota sobre a declaração de conformidade.** O que a Seção 12 descreve é uma **declaração de conformidade** — um checklist público que o implementador pode alegar cumprir. **Não é um selo de conformidade** no sentido de marca de certificação: não é registrado, não é emitido por autoridade reconhecedora, e não produz efeito de garantia. O mantenedor não é autoridade certificadora e não assume obrigação de fiscalizar implementadores. Alegar conformidade a um padrão de fato não cumprido é responsabilidade de quem alega.
 
 ---
 
@@ -80,6 +98,10 @@ const pessoaA: User = {
   updatedAt: new Date('2024-06-01T12:00:00Z'),
 };
 ```
+
+> **Não copie este formato para produção.** Em ambiente real, **não inclua nome, e-mail ou data de nascimento no core**. O tipo `User` os carrega por compatibilidade com sistemas que já os têm, mas o core não precisa de nenhum deles para funcionar: `ProfileService.build()` consome apenas `userId`, `assertions` e `consents`. Prefira `pseudonymizedId` e atributos de contexto (`region`, `state`, `schooling`) que não identificam a pessoa diretamente.
+>
+> **`pseudonymizedId` é pseudonimização, não anonimização.** Um dado pseudonimizado ainda é **dado pessoal** sob a LGPD (art. 13, §4º): pode ser reassociado por meio de informações adicionais guardadas separadamente. Só a anonimização irreversível (art. 12) retira o dado do regime legal — e ela é irreversível por definição. Ver a Seção 13.
 
 ---
 
@@ -143,36 +165,10 @@ source: { kind: 'self_report', date: new Date('2024-02-01') }
 ```
 
 > O core **não armazena documentos**. `fileId` é uma referência opaca ao armazenamento de quem implementa. Nenhum conteúdo clínico, endereço, telefone ou medicação pertence ao core.
+>
+> `professional_evaluation` indica que **um profissional habilitado** fez a afirmação. O core não verifica habilitação, não confere credencial e não autentica o `authorId`. A verificação é responsabilidade de quem implementa.
 
 ### 5.3 `Consent`
-
-```ts
-const consentClinica: Consent = {
-  id: 'cns_example_clinic',
-  userId: 'usr_example',
-  targetAudience: 'Clinic',
-  sharedAssertionIds: [
-    'asr_example_condition_attention',
-    'asr_example_condition_social',
-    'asr_example_attention',
-    'asr_example_memory',
-    'asr_example_stress',
-    'asr_example_social',
-    'asr_example_need_sleep',
-  ],
-  expiresAt: new Date('2025-06-01T23:59:59Z'),
-  revoked: false,
-};
-```
-
-| Campo | Como preencher |
-|---|---|
-| `targetAudience` | `Personal` · `Clinic` · `Company` |
-| `sharedAssertionIds` | IDs das asserções que essa audiência pode ver — **enumere, não automatize** |
-| `expiresAt` | Data no futuro. Passada, o consentimento é ignorado em silêncio |
-| `revoked` | `true` revoga imediatamente |
-
-Um consentimento mais restrito, para a empresa:
 
 ```ts
 const consentEmpresa: Consent = {
@@ -188,9 +184,58 @@ const consentEmpresa: Consent = {
 };
 ```
 
+| Campo | Como preencher |
+|---|---|
+| `targetAudience` | `Personal` · `Company` |
+| `sharedAssertionIds` | IDs das asserções que essa audiência pode ver — **enumere, não automatize** |
+| `expiresAt` | Data no futuro. Passada, o consentimento é ignorado em silêncio |
+| `revoked` | `true` revoga imediatamente |
+
+O consentimento é **da pessoa**. `Personal` significa que a pessoa acessa o próprio perfil — nenhum consentimento é necessário, porque se trata do titular do dado. `Company` significa que a pessoa autorizou o empregador a ver um conjunto enumerado de asserções.
+
+Enumere sempre. Não derive o compartilhamento por regra automática — "todas as asserções `Difficulty`" ou "todas as `Condition`" — porque consentimento enumerado é o que torna a revogação e a auditoria possíveis.
+
 ---
 
-## 6. `branch` × `type`: qual escolher
+## 6. Uso corporativo (`Company`)
+
+`targetAudience: 'Company'` existe para que **a própria pessoa** compartilhe, voluntariamente e de forma enumerada, as informações de adaptação que deseja que o empregador conheça, com o fim de **adaptação razoável** — ambiente acessível, instruções em formatos específicos, ajustes de rotina, organização de tarefas.
+
+**Não é um mecanismo de rastreamento, inventário ou classificação de funcionários.** O core não tem nenhuma função de categorizar pessoas para o empregador; ele apenas entrega, para a audiência escolhida, o conjunto de asserções que a pessoa autorizou.
+
+### O que o core faz e o que não faz
+
+| Camada | Quem define | O que entra |
+|---|---|---|
+| **Core** | o mantenedor | A estrutura da asserção, a regra de consentimento, a filtragem por audiência |
+| **Ambiente do empregador** | quem implementa | Quem vê, por quanto tempo fica, se vira relatório, se integra com folha, se some depois de um prazo |
+
+O core entrega um `ProfileView` filtrado. **O que o empregador faz com esse objeto depois é inteiramente fora do escopo do core.** O core não define retenção, controle de acesso, finalidade de uso nem integração com outros sistemas. Ele não amplia o que a pessoa compartilhou: se o empregador quiser saber algo que a pessoa **não** compartilhou, não consegue obtê-lo através do core.
+
+### Obrigações de quem implementa
+
+A relação de trabalho é desigual, e isso tem consequência jurídica direta. Em especial:
+
+- **Base legal.** A LGPD restringe o uso de consentimento como base legal em relações de trabalho, por causa do desequilíbrio de poder entre empregador e empregado. Quando o compartilhamento serve à adaptação razoável, a base legal mais robusta é o **cumprimento de obrigação legal** — notadamente o dever de ambiente de trabalho acessível e inclusivo do art. 34, §1º, da Lei 13.146/2015 (LBI), e as normas de saúde ocupacional (NR-7), e não o consentimento isolado. Quem implementa deve **fundamentar a base legal por escrito** antes de usar o core em contexto de RH.
+- **Minimização do acesso.** O dado sensível deve circular apenas por pessoal designado — RH, saúde ocupacional, encarregado de dados — e **não** por gestores diretos, colegas ou comitês de avaliação de desempenho.
+- **Vedação de uso decisório.** O dado **não pode** ser usado para decisão de demissão, avaliação de desempenho, promoções, classificação de risco ou qualquer outra finalidade discriminatória. A LBI veda discriminação em razão da condição da pessoa com deficiência inclusive nas etapas de recrutamento, seleção, contratação, admissão e exames (art. 34, §3º), e veda a exigência de aptidão plena.
+- **Sigilo do prontuário.** O empregador não acessa o laudo nem o prontuário de saúde ocupacional: recebe, no máximo, atestado de aptidão com restrições ou a informação funcional necessária à adaptação. A Seguridade Social tem regra própria de sigilo do prontuário ocupacional (NR-7).
+- **Retenção e eliminação.** Defina prazo de retenção e rotina de eliminação. Ver a Seção 15.
+- **Base legal e transparência.** Informe o empregado, de forma clara e acessível, que o tratamento está ocorrendo e com que finalidade — e registre essa informação.
+
+O core **não implementa, não verifica e não garante** conformidade com nenhuma dessas obrigações. Ele não sabe se a base legal é adequada, se o acesso está restrito, se o dado foi usado para demissão, ou se a retenção está correta. Ver a Seção 15.
+
+### Sobre a presunção de dispensa discriminatória
+
+Existe entendimento sumulado do TST (Súmula 443) de que a despedida de empregado portador de doença grave que suscita estigma ou preconceito presume-se discriminatória, invertendo o ônus da prova. **Esse entendimento é lido restritivamente e, em regra, não alcança a neurodivergência** — a jurisprudência exige doença que efetivamente incite estigma ou preconceito, o que não é a regra em casos de TDAH ou TEA.
+
+O risco relevante aqui não é a Súmula 443, e sim a combinação de três fatores: a vedação de discriminação e de exigência de aptidão plena da LBI (art. 34, §3º), o dever de adaptação razoável, e a proteção reforçada dos dados sensíveis de saúde sob a LGPD. Implementadores em contexto de RH devem tratar a transparência total sobre o uso do dado como obrigação, não como opção.
+
+> **Nota de escopo.** A Seção 13 descreve o regime de dados pessoais; a Seção 14, os limites regulatórios e deontológicos aplicáveis a quem implementa. Nenhuma das duas é implementada por esta biblioteca.
+
+---
+
+## 7. `branch` × `type`: qual escolher
 
 `branch` responde *onde* a afirmação se encaixa; `type` responde *que natureza* ela tem. São eixos independentes — a combinação é que dá o significado.
 
@@ -231,7 +276,7 @@ const consentEmpresa: Consent = {
 
 ---
 
-## 7. Facets: atributos conhecidos e livres
+## 8. Facets: atributos conhecidos e livres
 
 `facet.attribute` aceita **qualquer string** — o tipo `Open<T>` mantém os valores do vocabulário com autocomplete, mas não bloqueia novos. `Environment` não tem atributos definidos, então qualquer rótulo serve ali.
 
@@ -255,9 +300,17 @@ function assertFacetValid(facet: Facet): void {
 }
 ```
 
+### Independência em relação a classificações internacionais
+
+O vocabulário de `facet` é **original deste projeto**. Ele não reproduz, não traduz e não adapta categorias da **ICF** (International Classification of Functioning, Disability and Health) da OMS, nem do **ICD-11**.
+
+Isso é deliberado, e tem motivo jurídico. As classificações da OMS são protegidas por direito autoral e licenciadas pela OMS sob **CC BY-ND 3.0 IGO** — licença que **proíbe adaptações** e, expressamente, **exclui do escopo da licença** a produção de *crosswalks* (mapas entre classificações) e de traduções, que dependem de **acordo escrito separado com a OMS**. Um schema publicado em domínio público não pode, ao mesmo tempo, ser um derivado de material sob NoDerivs.
+
+Consequência prática: **este repositório não publica crosswalk entre `nd-profile-core` e ICF/ICD-11.** Se sua ferramenta precisar de um, trate-o como projeto próprio, com análise jurídica própria, e considere obter a licença aplicável à OMS. O mesmo vale para o código de categoria (`b140`, `d710`, …) e para as URIs de classificação: nada disso é usado aqui.
+
 ---
 
-## 8. Conjunto completo de asserções do exemplo sintético
+## 9. Conjunto completo de asserções do exemplo sintético
 
 ```ts
 import type { Assertion } from 'nd-profile-core';
@@ -438,7 +491,7 @@ const assertions: Assertion[] = [
 
 ---
 
-## 9. A saída
+## 10. A saída
 
 `ProfileService.build()` filtra as asserções conforme a audiência e os consentimentos ativos e devolve a visão.
 
@@ -447,9 +500,9 @@ import { ProfileService } from 'nd-profile-core';
 
 const profile = new ProfileService().build({
   userId: 'usr_example',
-  visibility: 'Clinic',
+  visibility: 'Company',
   assertions,
-  consents: [consentClinica],
+  consents: [consentEmpresa],
   now: new Date('2024-06-01T13:00:00Z'),
 });
 ```
@@ -459,7 +512,7 @@ const profile = new ProfileService().build({
 | `visibility` | O que aparece |
 |---|---|
 | `Personal` | Todas as asserções da própria pessoa. `expiresAt` é sempre `null` |
-| `Clinic` / `Company` | Apenas as asserções listadas em consentimentos **ativos** para essa audiência |
+| `Company` | Apenas as asserções listadas em consentimentos **ativos** para essa audiência |
 
 Consentimento ativo = mesmo `userId`, mesmo `targetAudience`, `revoked: false` e `expiresAt` no futuro.
 
@@ -470,10 +523,10 @@ Consentimento ativo = mesmo `userId`, mesmo `targetAudience`, `revoked: false` e
 ```ts
 {
   userId: 'usr_example',
-  visibility: 'Clinic',
+  visibility: 'Company',
   visibleAssertions: [ /* AssertionView[] */ ],
   generatedAt: new Date('2024-06-01T13:00:00Z'),
-  expiresAt: new Date('2025-06-01T23:59:59Z'),
+  expiresAt: new Date('2024-12-31T23:59:59Z'),
 }
 ```
 
@@ -499,34 +552,6 @@ Cada `AssertionView`:
 
 `polarity` é omitido — não `undefined` — quando não foi definido.
 
-### Saída da audiência clínica
-
-```ts
-const profile = new ProfileService().build({
-  userId: 'usr_example',
-  visibility: 'Clinic',
-  assertions,
-  consents: [consentClinica],
-  now: new Date('2024-06-01T13:00:00Z'),
-});
-
-console.log(profile.visibleAssertions.map((a) => a.description));
-```
-
-```
-'Cognition / attention: condition framing = attention-related condition (suggestive framing)'
-'Social / social_interaction: social framing = social reciprocity condition (suggestive framing)'
-'Cognition / attention: sustained attention and task persistence = high impact'
-'Cognition / memory: verbal learning and memory = moderate impact'
-'Regulation / stress: anxiety-related symptoms = mild impact'
-'Social / social_interaction: social reciprocity = consistent support needed'
-'Regulation / sleep: sleep hygiene = earlier sleep and reduced screen exposure before bed'
-```
-
-```
-profile.expiresAt  // 2025-06-01T23:59:59.000Z
-```
-
 ### Saída da audiência empresa
 
 ```ts
@@ -538,15 +563,19 @@ const profile = new ProfileService().build({
   now: new Date('2024-06-01T13:00:00Z'),
 });
 
-console.log(profile.visibleAssertions.map((a) => a.construct));
+console.log(profile.visibleAssertions.map((a) => a.description));
 ```
 
 ```
-'sustained attention and task persistence'
-'task organization'
+'Cognition / attention: sustained attention and task persistence = high impact'
+'Regulation / energy: task organization = one task at a time'
 ```
 
-Nada de diagnóstico, nada de enquadramento social — apenas o mínimo para o trabalho acontecer.
+Nada além do que a pessoa autorizou — nem diagnóstico, nem enquadramento, nem a totalidade das asserções. Se a pessoa quiser incluir uma asserção de `Condition` no consentimento de `Company`, o core a entrega: o consentimento é dela. O que a empresa faz com isso é responsabilidade dela, e é onde mora o risco jurídico (Seção 6).
+
+```
+profile.expiresAt  // 2024-12-31T23:59:59.000Z
+```
 
 ### Saída da audiência pessoal
 
@@ -568,15 +597,15 @@ profile.expiresAt;                // null
 ```ts
 // revogado
 new ProfileService().build({
-  userId: 'usr_example', visibility: 'Clinic', assertions,
-  consents: [{ ...consentClinica, revoked: true }],
+  userId: 'usr_example', visibility: 'Company', assertions,
+  consents: [{ ...consentEmpresa, revoked: true }],
   now: new Date('2024-06-01T13:00:00Z'),
 }).visibleAssertions; // []
 
 // expirado
 new ProfileService().build({
-  userId: 'usr_example', visibility: 'Clinic', assertions,
-  consents: [{ ...consentClinica, expiresAt: new Date('2020-01-01') }],
+  userId: 'usr_example', visibility: 'Company', assertions,
+  consents: [{ ...consentEmpresa, expiresAt: new Date('2020-01-01') }],
   now: new Date('2024-06-01T13:00:00Z'),
 }).visibleAssertions; // []
 ```
@@ -594,14 +623,14 @@ describeAssertion(atencao);
 
 ---
 
-## 10. Conformidade, versionamento e extensão
+## 11. Conformidade, versionamento e extensão
 
 ### Conformidade
 
 Implementações que se dizem compatíveis com `nd-profile-core` **MUST**:
 
 - produzir `Assertion` com `branch`, `type`, `facet`, `value`, `construct`, `source`, `status` e `polarity` (quando aplicável);
-- respeitar a filtragem por `Consent` e `visibility` exatamente como na Seção 9;
+- respeitar a filtragem por `Consent` e `visibility` exatamente como na Seção 10;
 - tratar `expiresAt` como prazo máximo, nunca estendê-lo;
 - ignorar asserções de outro `userId`.
 
@@ -631,16 +660,99 @@ Para necessidades que o core não cobre, use prefixo `x-` em objetos do core ou 
 
 ---
 
-## 11. Governança
+## 12. Governança e declaração de conformidade
 
 - **Propostas de mudança:** abra issue com a tag `proposal`, descrevendo o caso de uso e o impacto em conformidade.
 - **Decisão:** mudanças que afetam conformidade exigem aprovação do mantenedor e período de comentário público de 14 dias.
 - **Recusa:** propostas recusadas ficam registradas com justificativa.
-- **Selo de conformidade:** uso do nome `nd-profile-core` para indicar compatibilidade exige passar pelas checagens MUST acima. O selo é operado pelo mantenedor; o schema, não.
+- **Declaração de conformidade:** alegar compatibilidade exige passar pelas checagens MUST acima. A alegação é do implementador, e apenas dele. O mantenedor não emite selo, não inspeciona implementações e não assume responsabilidade por alegações de terceiros.
+
+> **Alerta sobre a marca.** O nome `nd-profile-core` não é marca registrada neste repositório. Usar o nome para descrever compatibilidade é livre; usá-lo de modo que sugira endosso, certificação ou registro não é. Se você registrar a marca, defina por escrito a política de uso do nome e mantenha-a pública.
 
 ---
 
-## 12. Integração com NestJS
+## 13. LGPD e proteção de dados
+
+> **Esta seção descreve o regime aplicável a quem implementa. Nada aqui é implementado, verificado ou garantido pela biblioteca.**
+
+### O que o core não faz por você
+
+O core **não é controlador nem operador de dados**. Não faz I/O, não armazena, não transmite, não criptografa, não controla acesso, não registra log, não gera relatório de impacto. Ele é uma função pura de filtragem em memória. **O implementador é o controlador, e a responsabilidade pelo cumprimento da LGPD é dele.**
+
+### Dados sensíveis de saúde
+
+A maior parte das asserções deste schema descreve saúde. Na LGPD, dado sobre saúde é **dado pessoal sensível** (art. 5º, II, "c"), e o regime do art. 11 é mais restritivo que o do art. 7: as bases legais usuais de legítimo interesse e consentimento genérico **não são suficientes**.
+
+O art. 11 admite consentimento **de forma específica e destacada, para finalidades específicas** (inciso I), e hipóteses independentes de consentimento (inciso II) — entre elas a proteção da saúde da própria pessoa, em especial em procedimento de assistência à saúde, e o cumprimento de obrigação legal. **Fundamente a base legal por escrito, por finalidade.**
+
+### Consentimento: o modelo do core ajuda
+
+O desenho de `Consent` corresponde razoavelmente aos requisitos materiais do art. 8º: finalidade específica (`targetAudience` + enumeração de `sharedAssertionIds`), destaque (o consentimento é um objeto explícito, não um flag), revogação facilitada (campo `revoked`) e prazo (`expiresAt`). O que o core **não** faz:
+
+- **coletar** o consentimento — não há UI, nem termo, nem registro do que foi aceito;
+- **comprovar a existência do consentimento** — o art. 8º, §2º incumbе o controlador de demonstrar a existência e guardar o consentimento sob sua guarda. O objeto `Consent` é a estrutura, não a prova;
+- **atender revogação** — o titular pode revogar a qualquer momento, por procedimento gratuito e facilitado (art. 8º, §5º). Implementar isso é seu;
+- **eliminar dados** — o art. 18º, VI dá direito à eliminação dos dados tratados com consentimento. Revogar impede novas entregas; **não apaga o que já foi persistido** (Seção 15).
+
+### Direitos do titular
+
+Confirme que sua implementação atende aos direitos do art. 18º: confirmação, acesso, correção, anonimização/bloqueio/eliminação, portabilidade e eliminação. O core entrega `ProfileView` e `describeAssertion()` — o que é, em boa parte, resposta de acesso; o resto é seu.
+
+### Relatório de impacto
+
+Operações de tratamento de dados sensíveis de saúde, especialmente quando combinam compartilhamento com terceiros, tendem a ser de **alto risco** e podem exigir **Relatório de Impacto à Proteção de Dados Pessoais** (RIPD), conforme a regulamentação da ANPD (Resolução CD/ANPD nº 23/2024, que aprova o regulamento do art. 5º, XI, e do art. 38 da LGPD). Há hipóteses de dispensa — notadamente quando o tratamento se baseia em consentimento (art. 11, I) ou em hipóteses do art. 11, II. **Avalie o seu caso com a ANPD ou com assessor jurídico**, não com esta seção.
+
+### Crianças e adolescentes
+
+Dados de neurodivergência de crianças e adolescentes exigem atenção redobrada: o art. 14º da LGPD manda que o tratamento considere o **melhor interesse** da criança e o consentimento específico e em destaque de um dos pais ou responsável legal. O core não tem noção de idade, de responsável legal ou de melhor interesse — `birthDate` no tipo `User` é dado de contexto, não mecanismo de verificação.
+
+### Transferência internacional e LGPD
+
+O core é agnóstico de jurisdição. Se o dado sair do Brasil, a ANPD pode exigir mecanismo de transferência internacional (arts. 33 a 36). Implementadores fora do Brasil devem, além disso, verificar o regime de dados sensíveis do GDPR (art. 9) e as bases legais que dele decorrem. Nada disso é tratado aqui.
+
+---
+
+## 14. Limites regulatórios e deontológicos
+
+> **Esta seção delimita o que a biblioteca é. Não é Implementado, verificado ou garantido por ela.**
+
+### Dispositivo médico (ANVISA)
+
+Esta biblioteca **não é dispositivo médico** e não tem finalidade médica. Não recebe entrada de paciente, não processa dado clínico, não emite saída diagnóstica, não calcula escore e não produz resultado interpretável como avaliação. Os rótulos `Condition` e `Diagnosis` são nomes de campo que descrevem a posição de uma afirmação no modelo.
+
+Software com indicação médica — diagnóstico, prognóstico, monitoramento, decisão clínica — é regulado no Brasil como **software como dispositivo médico (SaMD)**, pela RDC 788/2023 e pela RDC 751/2022, com classificação de risco e registro ou notificação conforme a classe. **Se alguém construir uma ferramenta que use este schema para finalidade médica, a responsabilidade regulatória é de quem a construiu.** A separação entre "estrutura" e "produto" é o que mantém esta biblioteca fora desse regime — e ela só se mantém se ninguém marketedear o schema como ferramenta de avaliação.
+
+### Contexto clínico: quem implementa responde
+
+O **sigilo profissional** é dever do profissional, não um atributo de dado. O `authorId` aponta para quem redactou a asserção; `source.kind: 'professional_evaluation'` indica que um profissional habilitado produziu o conteúdo. O core não verifica habilitação, não autentica autoria e não substitui a guarda de prontuário.
+
+- **Psicologia.** O Código de Ética do Psicólogo (CFP, 2005, art. 9º) impõe o dever de sigilo profissional, com reflexos na guarda e no compartilhamento de dados psicológicos. Compartilhar dado psicológico com empregador não é ato de terceiro: é ato do profissional responsável, e ele responde por ele.
+- **Medicina.** A Resolução CFM nº 2.454/2026, que normatiza o uso de IA na medicina, incide sobre **médicos e instituições médicas**, não sobre fornecedores de software — mas cria obrigações para quem usa IA em contexto assistencial: supervisão humana obrigatória, vedação à delegação de comunicação de diagnósticos sem mediação humana, registro do uso no prontuário, dever de zelar pela confidencialidade dos dados de saúde e responsabilidade do médico que permanece responsável pelas decisões. Implementadores que coloquem este core em fluxo assistencial devem observar essas normas.
+- **Exame de saúde ocupacional.** O acesso ao prontuário de saúde ocupacional é restrito ao médico responsável (coordenador) e, sob sigilo, ao empregador. O empregador não recebe diagnóstico: recebe atestado de aptidão com restrições.
+
+### Conformidade social e de dados
+
+Empresas que usam este core em contexto de RH operam em ambiente de **risco de neurodiscriminação** — o uso de dado de neurodivergência para fins decisórios. A ANPD trata dado neural como dado pessoal sensível e Andrea Radar Tecnológico nº 4 ("Neurotecnologias") discute o tratamento de dados neurais; o ângulo da neurodiscriminação tem reverberado na produção doutrinária e na sociedade civil. A mitigação é estrutural e está descrita na Seção 6: base legal fundamentada, acesso mínimo, vedação de uso decisório, retenção definida.
+
+---
+
+## 15. O que este core não garante
+
+**Falha fechada.** Sem consentimento ativo, `Company` não recebe nada. Não há caminho lateral, valor padrão implícito, fallback ou atalho que entregue asserções sem consentimento válido.
+
+**O core controla a entrega, não a posse.** Revogar um consentimento impede **novas** entregas via `build()`. O core **não apaga** cópias já persistidas pelo implementador — um `ProfileView` que foi salvo num banco, exportado, impresso ou sincronizado com outro sistema continua lá. Implementadores são responsáveis por definir política de retenção e eliminação após revogação, e por garantir o atendimento ao art. 18º da LGPD.
+
+**O core não modela o ambiente de destino.** Ele entrega um `ProfileView` filtrado pelo consentimento da pessoa. Como o implementador organiza, armazena, exibe ou integra esse perfil no próprio ambiente (sistema de RH, saúde ocupacional, ferramenta interna) é decisão e responsabilidade de quem implementa. O core não define retenção, controle de acesso, finalidade de uso nem integração com outros sistemas — apenas a estrutura da asserção e a regra de filtragem por consentimento.
+
+**O core não audita.** Ele não verifica se o dado é real ou fictício, se a base legal é adequada, se o acesso foi restringido, se o dado foi usado para demissão ou avaliação de desempenho, ou se a retenção está dentro do prazo.
+
+**O core não autentica.** `authorId` e `professional_evaluation` são declarações do implementador. Verificar habilitação profissional, autenticar autor e garantir que a avaliação exista são tarefas dele.
+
+**O core não garante conformidade regulatória.** Ele não implementa, não verifica e não garante observância da LGPD, da LBI, das normas de saúde ocupacional, do sigilo profissional ou de qualquer resolução de conselho profissional.
+
+---
+
+## 16. Integração com NestJS
 
 ```ts
 import { Injectable } from '@nestjs/common';
@@ -670,7 +782,7 @@ export class ProfileController {
 
 ---
 
-## 13. Armadilhas
+## 17. Armadilhas
 
 1. **Sem I/O.** A biblioteca só define contratos e filtra em memória. Persistência, autenticação e regras de negócio ficam com você.
 
@@ -692,9 +804,15 @@ export class ProfileController {
 
 10. **O core não armazena conteúdo clínico.** `fileId` referencia documento no armazenamento de quem implementa. Endereço, telefone, medicação e laudo pertencem ao sistema de saúde — nunca ao core.
 
+11. **Enumerar não é automatizar.** `sharedAssertionIds` é uma lista explícita. Não a preencha por regra — é a enumeração que torna a revogação auditável.
+
+12. **Revogação não é eliminação.** `revoked: true` esvazia as próximas entregas. O que já foi persistido continua lá, e a eliminação é sua (Seção 15).
+
+13. **Consentimento no trabalho é frágil.** Na relação de emprego, o consentimento como base legal é juridicamente frágil, por desequilíbrio de poder. Se o uso for adaptação razoável, fundamentação de obrigação legal costuma ser mais robusta (Seção 6).
+
 ---
 
-## 14. Desenvolvimento local
+## 18. Desenvolvimento local
 
 ```bash
 pnpm install
@@ -704,8 +822,8 @@ pnpm typecheck   # tsc --noEmit em modo estrito
 
 ---
 
-## 15. Atribuição
+## 19. Atribuição
 
 Este modelo foi concebido e especificado pelo mantenedor, com auxílio de ferramentas de IA (DeepSeek, Claude Code, ChatGPT) na redação, revisão e estruturação. O conteúdo final é de responsabilidade do autor. A especificação é aberta justamente para ser revisada por terceiros.
 
-O exemplo da Seção 4 e da Seção 8 é **fictício**. Nenhum caso clínico real, nenhum instrumento de avaliação e nenhum dado pessoal identificável foram utilizados na sua construção.
+O exemplo da Seção 4 e da Seção 9 é **fictício**. Nenhum caso clínico real, nenhum instrumento de avaliação e nenhum dado pessoal identificável foram utilizados na sua construção.

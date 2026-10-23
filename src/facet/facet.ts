@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import type { Open } from '../shared/index.js';
 
 export type FacetType = (typeof FACET_TYPES)[number];
@@ -26,35 +27,30 @@ export const FACET_TYPES = [
   'Environment',
 ] as const;
 
-export const AREA_KINDS = [
-  'Function',
-  'Activity',
-  'EnvironmentalFactor',
-  'SensoryChannel',
-] as const;
+export const AREA_KINDS = ['Function', 'Activity', 'Context', 'Sensory'] as const;
 
 export const FACET_TYPE_ATTRIBUTES = {
   Cognition: [
-    'visual sensitivity',
-    'auditory sensitivity',
-    'security support',
-    'assertive and normative communication',
-    'individual attitudes',
-    'social attitudes',
-    'norms and ideologies',
-    'healthcare professional support',
-    'professional_support',
     'attention',
     'memory',
     'reasoning',
+    'sensory sensitivity',
+    'visual sensitivity',
+    'auditory sensitivity',
+    'personal attitudes',
+    'group attitudes',
+    'social norms',
+    'professional_support',
+    'safety support',
+    'assertive communication',
   ],
-  Learning: ['reading', 'calculating', 'imitating', 'writing', 'visual', 'concepts'],
+  Learning: ['reading', 'writing', 'calculating', 'imitating', 'visual', 'concepts'],
   Communication: [
     'verbal',
     'written',
     'non-verbal',
     'sign language',
-    'use of devices and communication techniques',
+    'communication aids',
     'tactile',
   ],
   Regulation: [
@@ -68,13 +64,12 @@ export const FACET_TYPE_ATTRIBUTES = {
     'gustatory',
     'pain',
   ],
-  Mobility: ['public transportation', 'driving'],
+  Mobility: ['transportation', 'driving'],
   Social: [
     'social_interaction',
     'family',
-    'security support',
-    'basic interpersonal interactions',
-    'relationships with strangers',
+    'interpersonal reciprocity',
+    'interactions with unfamiliar people',
   ],
   Environment: [],
 } as const satisfies Record<FacetType, readonly string[]>;

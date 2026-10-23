@@ -1,15 +1,31 @@
 # Schema e documentação — CC0 1.0 Universal
 
-O **schema de domínio**, os **tipos**, os **vocabulários** e a **documentação** do
-`nd-profile-core` (incluindo o `README.md` e o conteúdo das pastas `src/`) são
-liberados sob **CC0 1.0 Universal** — domínio público, uso livre, sem atribuição
-obrigatória.
+O **schema de domínio** (o contrato, os vocabulários e a forma dos dados) e a
+**documentação** do `nd-profile-core` são liberados sob **CC0 1.0 Universal** —
+domínio público, uso livre, sem atribuição obrigatória.
 
-O **código de referência** (implementação em `src/`, artefatos em `dist/`) é
-licenciado sob **Apache-2.0**, no arquivo [`LICENSE`](./LICENSE).
+Concretamente, sob CC0 1.0:
+
+- o **schema JSON** em [`schema/nd-profile-core.schema.json`](./schema/nd-profile-core.schema.json);
+- o **README** e a documentação;
+- o **vocabulário** de `facet.type`, `facet.attribute`, `areas`, `branch`, `type`,
+  `status` e `polarity`, tal como enunciados na documentação.
+
+O **código de referência** — a implementação TypeScript em `src/` e os artefatos
+compilados em `dist/` — é licenciado sob **Apache-2.0**, no arquivo
+[`LICENSE`](./LICENSE). Cada arquivo em `src/` carrega o identificador
+`SPDX-License-Identifier: Apache-2.0`.
 
 Feito para que qualquer ferramenta — inclusive comercial — possa adotar a
-estrutura sem atrito jurídico.
+estrutura sem atrito jurídico. Quem quiser o schema sem atrito pode usar o JSON
+Schema da pasta `schema/`; quem quiser também o código, fica sob Apache-2.0, que
+preserva a cláusula de patente.
+
+> **Sobre a separação.** Em TypeScript, tipos e implementação vivem nos mesmos
+> arquivos. Por isso o CC0 recai sobre o *schema como contrato* — materializado
+> de forma independente e completa no JSON Schema — e o Apache-2.0 sobre o
+> *código*. Uma implementação que reescreva os tipos a partir do JSON Schema
+> não deriva do código sob Apache-2.0.
 
 ---
 

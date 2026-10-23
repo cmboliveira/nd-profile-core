@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 export type BrazilianRegion = (typeof BRAZILIAN_REGIONS)[number];
 
 export type BrazilianState = (typeof BRAZILIAN_STATES)[number];

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import type { Facet } from '../facet/index.js';
 
 export type AssertionBranch = (typeof ASSERTION_BRANCHES)[number];

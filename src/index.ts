@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 export { AUDIENCES } from './audience/index.js';
 export type { Audience } from './audience/index.js';
 

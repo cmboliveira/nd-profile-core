@@ -1,0 +1,246 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/camilabm/nd-profile-core/schema/nd-profile-core.schema.json",
+  "title": "ND Profile Core",
+  "description": "Schema de domínio para descrição funcional de funcionamento humano. Estrutura de dados apenas — não é dispositivo médico, não realiza diagnóstico e não processa dados de pacientes.",
+  "license": "CC0-1.0",
+  "type": "object",
+  "required": ["userId", "visibility", "assertions", "consents"],
+  "additionalProperties": false,
+  "properties": {
+    "userId": { "type": "string", "minLength": 1 },
+    "visibility": { "$ref": "#/$defs/audience" },
+    "assertions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/assertion" }
+    },
+    "consents": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/consent" }
+    },
+    "now": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Instante de referência. Ausente, o implementador usa o momento atual."
+    }
+  },
+  "$defs": {
+    "audience": {
+      "description": "Audiência para a qual o perfil é montado.",
+      "enum": ["Personal", "Company"]
+    },
+    "branch": {
+      "description": "Onde a afirmação se encaixa.",
+      "enum": ["Condition", "Functioning", "Context", "Preference"]
+    },
+    "assertionType": {
+      "description": "Natureza da afirmação. Rótulos de modelagem, não afirmações clínicas.",
+      "enum": ["Diagnosis", "Strength", "Difficulty", "Need"]
+    },
+    "assertionStatus": {
+      "description": "Confirmed quando há avaliação profissional; Suggestive quando é relato ou enquadramento em aberto.",
+      "enum": ["Confirmed", "Suggestive"]
+    },
+    "polarity": {
+      "enum": [
+        "higher_is_more_symptoms",
+        "higher_is_better",
+        "neutral",
+        "lower_is_better",
+        "lower_is_more_symptoms"
+      ]
+    },
+    "sourceKind": {
+      "enum": ["document", "self_report", "professional_evaluation"]
+    },
+    "facetType": {
+      "enum": [
+        "Cognition",
+        "Learning",
+        "Communication",
+        "Social",
+        "Regulation",
+        "Mobility",
+        "Environment"
+      ]
+    },
+    "areaKind": {
+      "enum": ["Function", "Activity", "Context", "Sensory"]
+    },
+    "facet": {
+      "type": "object",
+      "required": ["type", "areas", "attribute"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "$ref": "#/$defs/facetType" },
+        "areas": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/areaKind" }
+        },
+        "attribute": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Rótulo livre. Os valores conhecidos são um subconjunto; extensões são permitidas."
+        }
+      }
+    },
+    "source": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["kind", "date", "fileId"],
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "document" },
+            "date": { "type": "string", "format": "date" },
+            "fileId": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Referência opaca a documento no armazenamento de quem implementa. O core não armazena conteúdo."
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["kind", "date"],
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "self_report" },
+            "date": { "type": "string", "format": "date" }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["kind", "date"],
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "professional_evaluation" },
+            "date": { "type": "string", "format": "date" }
+          }
+        }
+      ]
+    },
+    "assertion": {
+      "type": "object",
+      "required": [
+        "id",
+        "userId",
+        "authorId",
+        "createdAt",
+        "branch",
+        "type",
+        "facet",
+        "value",
+        "construct",
+        "source",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "userId": { "type": "string", "minLength": 1 },
+        "authorId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Quem redactou a afirmação. O core não verifica habilitação profissional."
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "branch": { "$ref": "#/$defs/branch" },
+        "type": { "$ref": "#/$defs/assertionType" },
+        "facet": { "$ref": "#/$defs/facet" },
+        "value": {
+          "description": "A medida ou descrição. Prefira descrições funcionais a escores brutos.",
+          "oneOf": [{ "type": "string" }, { "type": "number" }]
+        },
+        "construct": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Nome da medida em linguagem funcional. Sem nome de instrumento, sem percentil, sem grau de laudo."
+        },
+        "source": { "$ref": "#/$defs/source" },
+        "polarity": { "$ref": "#/$defs/polarity" },
+        "status": { "$ref": "#/$defs/assertionStatus" }
+      }
+    },
+    "consent": {
+      "type": "object",
+      "required": [
+        "id",
+        "userId",
+        "targetAudience",
+        "sharedAssertionIds",
+        "expiresAt",
+        "revoked"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "userId": { "type": "string", "minLength": 1 },
+        "targetAudience": { "$ref": "#/$defs/audience" },
+        "sharedAssertionIds": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Enumeração explícita das asserções visíveis. Não derivar por regra automática."
+        },
+        "expiresAt": { "type": "string", "format": "date-time" },
+        "revoked": { "type": "boolean" }
+      }
+    },
+    "profileView": {
+      "description": "Visão filtrada devolvida pela montagem do perfil.",
+      "type": "object",
+      "required": [
+        "userId",
+        "visibility",
+        "visibleAssertions",
+        "generatedAt",
+        "expiresAt"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "userId": { "type": "string", "minLength": 1 },
+        "visibility": { "$ref": "#/$defs/audience" },
+        "visibleAssertions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/assertionView" }
+        },
+        "generatedAt": { "type": "string", "format": "date-time" },
+        "expiresAt": {
+          "oneOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }],
+          "description": "Menor expiração entre os consentimentos ativos. Null quando não há consentimento ativo — indistinguível de 'sem expiração'."
+        }
+      }
+    },
+    "assertionView": {
+      "type": "object",
+      "required": [
+        "id",
+        "branch",
+        "type",
+        "facet",
+        "value",
+        "construct",
+        "status",
+        "description"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "branch": { "$ref": "#/$defs/branch" },
+        "type": { "$ref": "#/$defs/assertionType" },
+        "facet": { "$ref": "#/$defs/facet" },
+        "value": {
+          "oneOf": [{ "type": "string" }, { "type": "number" }]
+        },
+        "construct": { "type": "string", "minLength": 1 },
+        "status": { "$ref": "#/$defs/assertionStatus" },
+        "polarity": { "$ref": "#/$defs/polarity" },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Texto legível: '<facet.type> / <facet.attribute>: <construct> = <value>'."
+        }
+      }
+    }
+  }
+}

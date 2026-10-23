@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 export type Audience = (typeof AUDIENCES)[number];
 
-export const AUDIENCES = ['Personal', 'Clinic', 'Company'] as const;
+export const AUDIENCES = ['Personal', 'Company'] as const;

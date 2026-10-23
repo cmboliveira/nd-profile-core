@@ -1,13 +1,14 @@
 {
   "name": "nd-profile-core",
   "version": "1.0.0",
-  "description": "Framework-agnostic domain contracts for neurodivergence profiles: assertion, facet, consent and profile-view types, vocabularies and filtering.",
+  "description": "Framework-agnostic domain contracts for neurodivergence profiles: assertion, facet, consent and profile-view types, vocabularies and audience-scoped filtering.",
   "keywords": [
     "neurodiversity",
     "neurodivergence",
     "profile",
     "accessibility",
     "disability",
+    "reasonable-accommodation",
     "domain-model",
     "domain-contracts",
     "framework-agnostic",
@@ -45,6 +46,7 @@
   "files": [
     "dist",
     "src",
+    "schema",
     "README.md",
     "LICENSE",
     "LICENSE-SCHEMA.md"

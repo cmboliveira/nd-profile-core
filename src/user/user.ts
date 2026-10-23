@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import type { BrazilianRegion, BrazilianState } from '../geography/index.js';
 import type { SchoolingLevel } from '../schooling/index.js';
 

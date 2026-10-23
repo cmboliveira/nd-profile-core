@@ -30,7 +30,7 @@ import { ProfileService, describeAssertion } from './src/index.js';
 import type { Assertion, Consent, User } from './src/index.js';
 ```
 
-Se você preferir consumir como pacote npm — publicado como `0.1.0`, versão de estudo sujeita a mudança —:
+Quando houver uma versão publicada no npm — a primeira é a `0.1.0`, de estudo, sujeita a mudança —, o consumo por pacote será:
 
 ```bash
 npm install nd-profile-core
@@ -229,7 +229,7 @@ O core entrega um `ProfileView` filtrado. **O que o empregador faz com esse obje
 
 A relação de trabalho é desigual, e isso tem consequência jurídica direta. Em especial:
 
-- **Base legal.** A LGPD restringe o uso de consentimento como base legal em relações de trabalho, por causa do desequilíbrio de poder entre empregador e empregado. Quando o compartilhamento serve à adaptação razoável, a base legal mais robusta é o **cumprimento de obrigação legal** — notadamente o dever de ambiente de trabalho acessível e inclusivo do art. 34, §1º, da Lei 13.146/2015 (LBI), e as normas de saúde ocupacional (NR-7), e não o consentimento isolado. Quem implementa deve **fundamentar a base legal por escrito** antes de usar o core em contexto de RH.
+- **Base legal.** A LGPD restringe o uso de consentimento como base legal em relações de trabalho, por causa do desequilíbrio de poder entre empregador e empregado. Quando o compartilhamento serve à adaptação razoável, a base legal mais robusta é o **cumprimento de obrigação legal** — notadamente o dever de ambiente de trabalho acessível e inclusivo do art. 34, §1º, da Lei 13.146/2015 (LBI), e as normas de saúde ocupacional (NR-7), e não o consentimento isolado. Quem implementa precisa **fundamentar a base legal por escrito** antes de usar o core em contexto de RH.
 - **Minimização do acesso.** O dado sensível deve circular apenas por pessoal designado — RH, saúde ocupacional, encarregado de dados — e **não** por gestores diretos, colegas ou comitês de avaliação de desempenho.
 - **Vedação de uso decisório.** O dado **não pode** ser usado para decisão de demissão, avaliação de desempenho, promoções, classificação de risco ou qualquer outra finalidade discriminatória. A LBI veda discriminação em razão da condição da pessoa com deficiência inclusive nas etapas de recrutamento, seleção, contratação, admissão e exames (art. 34, §3º), e veda a exigência de aptidão plena.
 - **Sigilo do prontuário.** O empregador não acessa o laudo nem o prontuário de saúde ocupacional: recebe, no máximo, atestado de aptidão com restrições ou a informação funcional necessária à adaptação. A NR-7 (item 7.6.1.1) determina a guarda do prontuário sob **acesso restrito** — RH, gestores e qualquer profissional não-médico ficam de fora — e o dever de sigilo é ancorado no Código de Ética Médica.
@@ -753,13 +753,13 @@ O core é agnóstico de jurisdição. Se o dado sair do Brasil, a ANPD pode exig
 
 Esta biblioteca **não é dispositivo médico** e não tem finalidade médica. Não recebe entrada de paciente, não processa dado clínico, não emite saída diagnóstica, não calcula escore e não produz resultado interpretável como avaliação. Os rótulos `Condition` e `Diagnosis` são nomes de campo que descrevem a posição de uma afirmação no modelo.
 
-Software com indicação médica — diagnóstico, prognóstico, monitoramento, decisão clínica — é regulado no Brasil como **software como dispositivo médico (SaMD)**, pela RDC 788/2023 e pela RDC 751/2022, com classificação de risco e registro ou notificação conforme a classe.
+Software com indicação médica — diagnóstico, prognóstico, monitoramento, decisão clínica — é regulado no Brasil como **software como dispositivo médico (SaMD)**, pela RDC 751/2022 (vigente com alterações, que expressamente disciplina a definição, a classificação e as regras aplicáveis ao SaMD), com classificação de risco e registro ou notificação conforme a classe.
 
 **Este schema não é dispositivo médico, e o core não tem finalidade médica alguma.** A separação entre "estrutura" e "produto" é o que mantém esta biblioteca fora daquele regime: quem constrói a ferramenta decide a finalidade de uso, e é quem responde pela conformidade do produto que construiu. O core não indica finalidades, não classifica risco e não emite saída diagnóstica — se um produto construído sobre ele fizer isso, o produto é que é dispositivo médico.
 
 ### Contexto clínico: quem implementa responde
 
-O **sigilo profissional** é dever do profissional, não um atributo de dado. O `authorId` aponta para quem redactou a asserção; `source.kind: 'professional_evaluation'` indica que um profissional habilitado produziu o conteúdo. O core não verifica habilitação, não autentica autoria e não substitui a guarda de prontuário.
+O **sigilo profissional** é dever do profissional, não um atributo de dado. O `authorId` aponta para quem produziu a asserção; `source.kind: 'professional_evaluation'` indica que um profissional habilitado produziu o conteúdo. O core não verifica habilitação, não autentica autoria e não substitui a guarda de prontuário.
 
 - **Psicologia.** O Código de Ética do Psicólogo (CFP, 2005, art. 9º) impõe o dever de sigilo profissional, com reflexos na guarda e no compartilhamento de dados psicológicos. Compartilhar dado psicológico com empregador não é ato de terceiro: é ato do profissional responsável, e ele responde por ele.
 - **Medicina.** A Resolução CFM nº 2.454/2026, que normatiza o uso de IA na medicina, incide sobre **médicos e instituições médicas que usam IA em contexto assistencial** — não sobre fornecedores de software. Se um produto construído sobre este schema for usado por um médico, é o **médico** que responde perante o CFM, não o fornecedor do schema. As obrigações ali previstas (supervisão humana, vedação à delegação de comunicação de diagnósticos sem mediação humana, registro do uso no prontuário, dever de zelar pela confidencialidade dos dados de saúde) são dele. O core não é destinado a contexto assistencial.
@@ -867,6 +867,6 @@ pnpm typecheck   # tsc --noEmit em modo estrito
 
 ## 19. Atribuição
 
-Este modelo foi concebido e especificado pelo mantenedor, com auxílio de ferramentas de IA (DeepSeek, Claude Code, ChatGPT) na redação, revisão e estruturação. O conteúdo final é de responsabilidade do autor, e não das ferramentas de IA utilizadas. A especificação é aberta justamente para ser revisada por terceiros.
+Este modelo foi concebido e especificado pelo mantenedor, com auxílio de ferramentas de IA (DeepSeek, Claude Code, ChatGPT) na redação, revisão e estruturação. O conteúdo final é de responsabilidade do mantenedor, e não das ferramentas de IA utilizadas. A especificação é aberta justamente para ser revisada por terceiros.
 
 O exemplo da Seção 4 e da Seção 9 é **fictício**. Nenhum caso clínico real, nenhum instrumento de avaliação e nenhum dado pessoal identificável foram utilizados na sua construção.

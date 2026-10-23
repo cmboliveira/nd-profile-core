@@ -219,11 +219,24 @@ A relação de trabalho é desigual, e isso tem consequência jurídica direta. 
 - **Base legal.** A LGPD restringe o uso de consentimento como base legal em relações de trabalho, por causa do desequilíbrio de poder entre empregador e empregado. Quando o compartilhamento serve à adaptação razoável, a base legal mais robusta é o **cumprimento de obrigação legal** — notadamente o dever de ambiente de trabalho acessível e inclusivo do art. 34, §1º, da Lei 13.146/2015 (LBI), e as normas de saúde ocupacional (NR-7), e não o consentimento isolado. Quem implementa deve **fundamentar a base legal por escrito** antes de usar o core em contexto de RH.
 - **Minimização do acesso.** O dado sensível deve circular apenas por pessoal designado — RH, saúde ocupacional, encarregado de dados — e **não** por gestores diretos, colegas ou comitês de avaliação de desempenho.
 - **Vedação de uso decisório.** O dado **não pode** ser usado para decisão de demissão, avaliação de desempenho, promoções, classificação de risco ou qualquer outra finalidade discriminatória. A LBI veda discriminação em razão da condição da pessoa com deficiência inclusive nas etapas de recrutamento, seleção, contratação, admissão e exames (art. 34, §3º), e veda a exigência de aptidão plena.
-- **Sigilo do prontuário.** O empregador não acessa o laudo nem o prontuário de saúde ocupacional: recebe, no máximo, atestado de aptidão com restrições ou a informação funcional necessária à adaptação. A Seguridade Social tem regra própria de sigilo do prontuário ocupacional (NR-7).
+- **Sigilo do prontuário.** O empregador não acessa o laudo nem o prontuário de saúde ocupacional: recebe, no máximo, atestado de aptidão com restrições ou a informação funcional necessária à adaptação. A NR-7 (item 7.6.1.1) determina a guarda do prontuário sob **acesso restrito** — RH, gestores e qualquer profissional não-médico ficam de fora — e o dever de sigilo é ancorado no Código de Ética Médica.
 - **Retenção e eliminação.** Defina prazo de retenção e rotina de eliminação. Ver a Seção 15.
 - **Base legal e transparência.** Informe o empregado, de forma clara e acessível, que o tratamento está ocorrendo e com que finalidade — e registre essa informação.
+- **Riscos psicossociais.** Desde 26 de maio de 2026, a NR-1 exige que os riscos psicossociais sejam identificados, avaliados e controlados no Gerenciamento de Riscos Ocupacionais (GRO), junto do inventário de riscos e do plano de ação. Isso disciplina o **ambiente de trabalho**, não este schema — mas implementadores que cuidem de adaptações individuais devem alinhá-las ao PGR da empresa em vez de tratarem o perfil como caso isolado. A NR-1 disciplina o ambiente, não o perfil individual: o core não substitui o PGR nem serve como inventário de riscos psicossociais.
+- **Integração com sistemas existentes.** Se o perfil acabar alimentando o eSocial (evento S-2220, *Monitoramento da Saúde do Trabalhador*), a interface é do implementador: o evento é alimentado por dados de atestados de saúde ocupacional, com layouts e prazos próprios. O core não tem qualquer integração com sistemas oficiais, e não deve ser usado como fonte para eles.
 
 O core **não implementa, não verifica e não garante** conformidade com nenhuma dessas obrigações. Ele não sabe se a base legal é adequada, se o acesso está restrito, se o dado foi usado para demissão, ou se a retenção está correta. Ver a Seção 15.
+
+### Checklist antes de usar em contexto corporativo
+
+Não é orientação jurídica — é a lista mínima de perguntas que evitam os erros mais comuns:
+
+- Qual é a base legal do tratamento? Consentimento, obrigação legal, ou outra? Está fundamentada por escrito?
+- Quem acessa os dados? O acesso está limitado ao mínimo necessário, e é auditável?
+- Por quanto tempo os dados são retidos? Existe rotina de eliminação após revogação?
+- Os dados podem ser usados para decisões de RH — promoção, demissão, avaliação de desempenho? **Recomendação: não.**
+- O empregado sabe que o dado é tratado, por quem e com que finalidade?
+- O que acontece quando a pessoa revoga o consentimento? O que já foi persistido, e quem apaga?
 
 ### Sobre a presunção de dispensa discriminatória
 
@@ -687,10 +700,14 @@ O art. 11 admite consentimento **de forma específica e destacada, para finalida
 
 ### Consentimento: o modelo do core ajuda
 
-O desenho de `Consent` corresponde razoavelmente aos requisitos materiais do art. 8º: finalidade específica (`targetAudience` + enumeração de `sharedAssertionIds`), destaque (o consentimento é um objeto explícito, não um flag), revogação facilitada (campo `revoked`) e prazo (`expiresAt`). O que o core **não** faz:
+O desenho de `Consent` corresponde razoavelmente aos requisitos materiais do art. 8º: finalidade específica (`targetAudience` + enumeração de `sharedAssertionIds`), destaque (o consentimento é um objeto explícito, não um flag), revogação facilitada (campo `revoked`) e prazo (`expiresAt`).
+
+> **Ressalva para uso em contexto de trabalho.** Em relações de emprego, o consentimento é especialmente frágil: o Radar Tecnológico nº 4 da ANPD registra que ele pode se tornar inválido "por ausência de livre manifestação de vontade quando as circunstâncias indicarem a posição de desvantagem do titular, em especial quando puder sofrer consequências negativas caso não consinta com o tratamento de seus dados". Para `Company`, a base legal preferencial não é o consentimento isolado, mas a obrigação legal de adaptação razoável (LBI, art. 34, §1º) — ver a Seção 6. Ter um `Consent` bem formado **não** resolve essa questão.
+
+O que o core **não** faz:
 
 - **coletar** o consentimento — não há UI, nem termo, nem registro do que foi aceito;
-- **comprovar a existência do consentimento** — o art. 8º, §2º incumbе o controlador de demonstrar a existência e guardar o consentimento sob sua guarda. O objeto `Consent` é a estrutura, não a prova;
+- **comprovar a existência do consentimento** — o art. 8º, §2º incumbe o controlador de demonstrar a existência e guardar o consentimento sob sua guarda. O objeto `Consent` é a estrutura, não a prova;
 - **atender revogação** — o titular pode revogar a qualquer momento, por procedimento gratuito e facilitado (art. 8º, §5º). Implementar isso é seu;
 - **eliminar dados** — o art. 18º, VI dá direito à eliminação dos dados tratados com consentimento. Revogar impede novas entregas; **não apaga o que já foi persistido** (Seção 15).
 
@@ -700,7 +717,7 @@ Confirme que sua implementação atende aos direitos do art. 18º: confirmação
 
 ### Relatório de impacto
 
-Operações de tratamento de dados sensíveis de saúde, especialmente quando combinam compartilhamento com terceiros, tendem a ser de **alto risco** e podem exigir **Relatório de Impacto à Proteção de Dados Pessoais** (RIPD), conforme a regulamentação da ANPD (Resolução CD/ANPD nº 23/2024, que aprova o regulamento do art. 5º, XI, e do art. 38 da LGPD). Há hipóteses de dispensa — notadamente quando o tratamento se baseia em consentimento (art. 11, I) ou em hipóteses do art. 11, II. **Avalie o seu caso com a ANPD ou com assessor jurídico**, não com esta seção.
+Operações de tratamento de dados sensíveis de saúde, especialmente quando combinam compartilhamento com terceiros, tendem a ser de **alto risco** e podem exigir **Relatório de Impacto à Proteção de Dados Pessoais** (RIPD), conforme a regulamentação da ANPD (Resolução CD/ANPD nº 23/2024, que aprova o regulamento do art. 5º, XI, e do art. 38 da LGPD). Há hipóteses de dispensa — notadamente quando o tratamento se baseia em consentimento (art. 11, I) ou em hipóteses do art. 11, II. **A avaliação de alto risco e a eventual exigência de RIPD são responsabilidade do controlador** — cabe ao implementador determinar se a sua operação se enquadra, com base nos fatos do seu tratamento, e não nesta seção.
 
 ### Crianças e adolescentes
 
@@ -714,25 +731,33 @@ O core é agnóstico de jurisdição. Se o dado sair do Brasil, a ANPD pode exig
 
 ## 14. Limites regulatórios e deontológicos
 
-> **Esta seção delimita o que a biblioteca é. Não é Implementado, verificado ou garantido por ela.**
+> **Esta seção delimita o que a biblioteca é. Nada aqui é implementado, verificado ou garantido por ela.**
 
 ### Dispositivo médico (ANVISA)
 
 Esta biblioteca **não é dispositivo médico** e não tem finalidade médica. Não recebe entrada de paciente, não processa dado clínico, não emite saída diagnóstica, não calcula escore e não produz resultado interpretável como avaliação. Os rótulos `Condition` e `Diagnosis` são nomes de campo que descrevem a posição de uma afirmação no modelo.
 
-Software com indicação médica — diagnóstico, prognóstico, monitoramento, decisão clínica — é regulado no Brasil como **software como dispositivo médico (SaMD)**, pela RDC 788/2023 e pela RDC 751/2022, com classificação de risco e registro ou notificação conforme a classe. **Se alguém construir uma ferramenta que use este schema para finalidade médica, a responsabilidade regulatória é de quem a construiu.** A separação entre "estrutura" e "produto" é o que mantém esta biblioteca fora desse regime — e ela só se mantém se ninguém marketedear o schema como ferramenta de avaliação.
+Software com indicação médica — diagnóstico, prognóstico, monitoramento, decisão clínica — é regulado no Brasil como **software como dispositivo médico (SaMD)**, pela RDC 788/2023 e pela RDC 751/2022, com classificação de risco e registro ou notificação conforme a classe.
+
+**Este schema não é dispositivo médico, e o core não tem finalidade médica alguma.** A separação entre "estrutura" e "produto" é o que mantém esta biblioteca fora daquele regime: quem constrói a ferramenta decide a finalidade de uso, e é quem responde pela conformidade do produto que construiu. O core não indica finalidades, não classifica risco e não emite saída diagnóstica — se um produto construído sobre ele fizer isso, o produto é que é dispositivo médico.
 
 ### Contexto clínico: quem implementa responde
 
 O **sigilo profissional** é dever do profissional, não um atributo de dado. O `authorId` aponta para quem redactou a asserção; `source.kind: 'professional_evaluation'` indica que um profissional habilitado produziu o conteúdo. O core não verifica habilitação, não autentica autoria e não substitui a guarda de prontuário.
 
 - **Psicologia.** O Código de Ética do Psicólogo (CFP, 2005, art. 9º) impõe o dever de sigilo profissional, com reflexos na guarda e no compartilhamento de dados psicológicos. Compartilhar dado psicológico com empregador não é ato de terceiro: é ato do profissional responsável, e ele responde por ele.
-- **Medicina.** A Resolução CFM nº 2.454/2026, que normatiza o uso de IA na medicina, incide sobre **médicos e instituições médicas**, não sobre fornecedores de software — mas cria obrigações para quem usa IA em contexto assistencial: supervisão humana obrigatória, vedação à delegação de comunicação de diagnósticos sem mediação humana, registro do uso no prontuário, dever de zelar pela confidencialidade dos dados de saúde e responsabilidade do médico que permanece responsável pelas decisões. Implementadores que coloquem este core em fluxo assistencial devem observar essas normas.
+- **Medicina.** A Resolução CFM nº 2.454/2026, que normatiza o uso de IA na medicina, incide sobre **médicos e instituições médicas que usam IA em contexto assistencial** — não sobre fornecedores de software. Se um produto construído sobre este schema for usado por um médico, é o **médico** que responde perante o CFM, não o fornecedor do schema. As obrigações ali previstas (supervisão humana, vedação à delegação de comunicação de diagnósticos sem mediação humana, registro do uso no prontuário, dever de zelar pela confidencialidade dos dados de saúde) são dele. O core não é destinado a contexto assistencial.
 - **Exame de saúde ocupacional.** O acesso ao prontuário de saúde ocupacional é restrito ao médico responsável (coordenador) e, sob sigilo, ao empregador. O empregador não recebe diagnóstico: recebe atestado de aptidão com restrições.
 
 ### Conformidade social e de dados
 
-Empresas que usam este core em contexto de RH operam em ambiente de **risco de neurodiscriminação** — o uso de dado de neurodivergência para fins decisórios. A ANPD trata dado neural como dado pessoal sensível e Andrea Radar Tecnológico nº 4 ("Neurotecnologias") discute o tratamento de dados neurais; o ângulo da neurodiscriminação tem reverberado na produção doutrinária e na sociedade civil. A mitigação é estrutural e está descrita na Seção 6: base legal fundamentada, acesso mínimo, vedação de uso decisório, retenção definida.
+Empresas que usam este core em contexto de RH operam em ambiente de **risco de neurodiscriminação** — discrimininação decorrente de inferências feitas sobre estados mentais. O termo é cunhado na doutrina (Ienca; Ignatiadis, 2020) e aparece no **Radar Tecnológico nº 4 da ANPD** ("Neurotecnologias"), que registra: o art. 6º, IX, da LGPD proíbe o tratamento de dados neurais que constitua discriminação antijurídica; e *"no ambiente de trabalho, empregados podem ser tratados com base na inferência sobre estados mentais e emocionais"* (ICO, 2023).
+
+O mesmo Radar é explícito sobre consentimento em contexto laboral: ele *"pode se tornar inválido por ausência de livre manifestação de vontade quando as circunstâncias indicarem a posição de desvantagem do titular, em especial quando puder sofrer consequências negativas caso não consinta com o tratamento de seus dados"*, e conclui que o uso da hipótese normativa do consentimento *"dificilmente será adequado em aplicações de neurotecnologias nos ambientes de trabalho e escolar"*.
+
+> **Ressalva de escopo, e é importante.** O Radar trata de **neurotecnologias** — captação de sinal neural por dispositivo. O `nd-profile-core` **não é neurotecnologia**: ele não capta nada, não infere estado mental e não gera dado por dispositivo. As afirmações do Radar não são automaticamente aplicáveis a este schema. Mas o **princípio** que ele enuncia — consentimento fragilizado quando o titular está em posição de desvantagem e sofre consequências negativas por não consentir — é de aplicação geral e vale integralmente para o caso de uso `Company`, onde o titular é empregado do destinatário. É por isso que a Seção 6 recomenda fundamento legal que não dependa do consentimento isolado.
+
+A mitigação é estrutural e está descrita na Seção 6: base legal fundamentada, acesso mínimo, vedação de uso decisório, retenção definida.
 
 ---
 
@@ -747,6 +772,8 @@ Empresas que usam este core em contexto de RH operam em ambiente de **risco de n
 **O core não audita.** Ele não verifica se o dado é real ou fictício, se a base legal é adequada, se o acesso foi restringido, se o dado foi usado para demissão ou avaliação de desempenho, ou se a retenção está dentro do prazo.
 
 **O core não autentica.** `authorId` e `professional_evaluation` são declarações do implementador. Verificar habilitação profissional, autenticar autor e garantir que a avaliação exista são tarefas dele.
+
+**A conformidade regulatória é responsabilidade do implementador.** Este core fornece apenas uma estrutura de modelagem de dados. Implementadores que o utilizarem em cenários específicos — incluindo, mas não se limitando a, gestão de recursos humanos, saúde ocupacional e segurança do trabalho — devem **determinar por si mesmos** se estão sujeitos a requisitos regulatórios específicos (NRs, LGPD, eSocial, legislação setorial, regras internas da organização) e garantir a conformidade por conta própria. O core não fornece orientação regulatória, não verifica conformidade e não substitui aconselhamento jurídico.
 
 **O core não garante conformidade regulatória.** Ele não implementa, não verifica e não garante observância da LGPD, da LBI, das normas de saúde ocupacional, do sigilo profissional ou de qualquer resolução de conselho profissional.
 
@@ -824,6 +851,6 @@ pnpm typecheck   # tsc --noEmit em modo estrito
 
 ## 19. Atribuição
 
-Este modelo foi concebido e especificado pelo mantenedor, com auxílio de ferramentas de IA (DeepSeek, Claude Code, ChatGPT) na redação, revisão e estruturação. O conteúdo final é de responsabilidade do autor. A especificação é aberta justamente para ser revisada por terceiros.
+Este modelo foi concebido e especificado pelo mantenedor, com auxílio de ferramentas de IA (DeepSeek, Claude Code, ChatGPT) na redação, revisão e estruturação. O conteúdo final é de responsabilidade do autor, e não das ferramentas de IA utilizadas. A especificação é aberta justamente para ser revisada por terceiros.
 
 O exemplo da Seção 4 e da Seção 9 é **fictício**. Nenhum caso clínico real, nenhum instrumento de avaliação e nenhum dado pessoal identificável foram utilizados na sua construção.
